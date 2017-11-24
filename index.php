@@ -1,4 +1,6 @@
 <?php include "parts/header.php"; ?>
+<?php include "bdd/pdo.php"; ?>
+<?php include "control/request.php"; ?>
 
 <!-- titre -->
 <div class="page-header">
@@ -19,12 +21,10 @@
         <div class="panel-body">
           <label for="firstname">Nom :</label>
           <input type="text" name="firstname" class="form-control">
-
           <label for="name">Prénom :</label>
           <input type="text" name="name" class="form-control">
-
           <label for="birthday">Date de naissance :</label>
-          <input type="text" name="birthday" class="form-control" placeholder="jj/mm/aaaa">
+          <input type="date" name="birthday" class="form-control" id="datepicker" placeholder="jj/mm/aaaa">
         </div>
       </div>
     </div>
@@ -50,13 +50,22 @@
               <label for="specialite">Spécialité :</label>
               <input type="text" name="specialite" class="form-control">
               <label for="cardio">Cardiologue référent :</label>
-              <input type="text" name="cardio" class="form-control">
+              <input type="text" name="cardio" class="form-control" placeholder="Nom et Prénom">
             </div>
           </div>
         </div>
       </div>
     </div>
     <!-- panel médecin -->
+
+    <!-- traitement des données du médecins -->
+    <?php
+    if(isset($_POST['firstname_doc']) && isset($_POST['name_doc']) && isset($_POST['mail_doc']) && isset($_POST['specialite']) && isset($_POST['cardio'])){
+      doctor($_POST['firstname_doc'], $_POST['name_doc'], $_POST['mail_doc'], $_POST['specialite'], $_POST['cardio']);
+    }
+    ?>
+    <!-- traitement des données du médecins -->
+
   </div>
   <!-- panel traitement -->
   <div class="row form-group">
@@ -67,15 +76,26 @@
         </div>
         <div class="panel-body">
           <ul class="list-group">
-            <li class="list-group-item">Aspirine<input type="checkbox" class="right" name="aspirine"></li>
-            <li class="list-group-item">Thienopyridine<input type="checkbox" class="right" name="thieno"></li>
-            <li class="list-group-item">AVK<input type="checkbox" class="right" name="avk"></li>
-            <li class="list-group-item">NACO<input type="checkbox" class="right" name="naco"></li>
-            <li class="list-group-item">Aucun<input type="checkbox" class="right" name="aucun"></li>
+            <li class="list-group-item">Aspirine<input type="checkbox" class="right" value="aspirine" name="traitement[]"></li>
+            <li class="list-group-item">Thienopyridine<input type="checkbox" class="right" value="thieno" name="traitement[]"></li>
+            <li class="list-group-item">AVK<input type="checkbox" class="right" value="avk" name="traitement[]"></li>
+            <li class="list-group-item">NACO<input type="checkbox" class="right" value="naco" name="traitement[]"></li>
+            <li class="list-group-item">Aucun<input type="checkbox" class="right" value="aucun" name="traitement[]"></li>
           </ul>
         </div>
       </div>
     </div>
+
+    <!-- traitement des données patient et traitement -->
+    <?php
+    if (isset($_POST['firstname']) && isset($_POST['name']) && $_POST['birthday'] && isset($_POST['neuro_hemo'])) {
+      patientId($_POST['firstname'], $_POST['name'], $_POST['birthday'], $_POST['neuro_hemo']);
+    }else if(isset($_POST['traitement'])){
+      traitmentAction($_POST['traitement']);
+    }
+    ?>
+    <!-- traitement des données patient et traitement -->
+
     <div class="col-sm-8">
       <div class="panel panel-info">
         <div class="panel-heading">
@@ -85,32 +105,50 @@
           <div class="row">
             <div class="col-sm-6">
               <ul class="list-group">
-                <li class="list-group-item">Insuffisance cardiaque<input class="right" type="checkbox" name="insu_cardiaque"></li>
-                <li class="list-group-item">HTA<input class="right" type="checkbox" name="hta"></li>
-                <li class="list-group-item">Age >= 76 ans<input class="right" type="checkbox" name="age"></li>
-                <li class="list-group-item">Diabète<input class="right" type="checkbox" name="diabete"></li>
-                <li class="list-group-item">ATCD AIT ou AVC<input class="right" type="checkbox" name="atcd"></li>
-                <li class="list-group-item">Vascular Disease<input class="right" type="checkbox" name="vasculaire"></li>
-                <li class="list-group-item">Age 65-74 ans<input class="right" type="checkbox" name="age_tranche"></li>
-                <li class="list-group-item">Sexe féminin<input class="right" type="checkbox" name="femme"></li>
+                <li class="list-group-item">Insuffisance cardiaque<input class="right" type="checkbox" value="insu_cardiaque" name="cha[]"></li>
+                <li class="list-group-item">HTA<input class="right" type="checkbox" value="hta" name="cha[]"></li>
+                <li class="list-group-item">Age >= 76 ans<input class="right" type="checkbox" value="age" name="cha[]"></li>
+                <li class="list-group-item">Diabète<input class="right" type="checkbox" value="diabete" name="cha[]"></li>
+                <li class="list-group-item">ATCD AIT ou AVC<input class="right" type="checkbox" value="atcd" name="cha[]"></li>
+                <li class="list-group-item">Vascular Disease<input class="right" type="checkbox" value="vasculaire" name="cha[]"></li>
+                <li class="list-group-item">Age 65-74 ans<input class="right" type="checkbox" value="age_tranche" name="cha[]"></li>
+                <li class="list-group-item">Sexe féminin<input class="right" type="checkbox" value="femme" name="cha[]"></li>
                 <li class="list-group-item">//</li>
-                <li class="list-group-item">Total :<p class="right">10</p></li>
+                <li class="list-group-item">Total :<p class="right"></p></li>
               </ul>
             </div>
+
+            <!-- traitement des données score checkbox cha -->
+            <?php
+              if(isset($_POST['cha'])){
+                scoreCha($_POST['cha']);
+              }
+            ?>
+            <!-- traitement des données score checkbox cha -->
+
             <div class="col-sm-6">
               <ul class="list-group">
-                <li class="list-group-item">HTA<input class="right" type="checkbox" name="hta_has"></li>
-                <li class="list-group-item">Insuffisance hépatique<input class="right" type="checkbox" name="insu_hepatique"></li>
-                <li class="list-group-item">Insufisance rénale<input class="right" type="checkbox" name="insu_renale"></li>
-                <li class="list-group-item">ATCD AIT ou AVC<input class="right" type="checkbox" name="ait"></li>
-                <li class="list-group-item">Saignement<input class="right" type="checkbox" name="saignement"></li>
-                <li class="list-group-item">INR labile<input class="right" type="checkbox" name="inr"></li>
-                <li class="list-group-item">Age >= 65 ans<input class="right" type="checkbox" name="age_has"></li>
-                <li class="list-group-item">Alcool<input class="right" type="checkbox" name="alcool"></li>
-                <li class="list-group-item">Ains<input class="right" type="checkbox" name="ains"></li>
-                <li class="list-group-item">Total :<p class="right">15</p></li>
+                <li class="list-group-item">HTA<input class="right" type="checkbox" value="hta_has" name="has[]"></li>
+                <li class="list-group-item">Insuffisance hépatique<input class="right" type="checkbox" value="insu_hepatique" name="has[]"></li>
+                <li class="list-group-item">Insufisance rénale<input class="right" type="checkbox" value="insu_renale" name="has[]"></li>
+                <li class="list-group-item">ATCD AIT ou AVC<input class="right" type="checkbox" value="ait" name="has[]"></li>
+                <li class="list-group-item">Saignement<input class="right" type="checkbox" value="saignement" name="has[]"></li>
+                <li class="list-group-item">INR labile<input class="right" type="checkbox" value="inr" name="has[]"></li>
+                <li class="list-group-item">Age >= 65 ans<input class="right" type="checkbox" value="age_has" name="has[]"></li>
+                <li class="list-group-item">Alcool<input class="right" type="checkbox" value="alcool" name="has[]"></li>
+                <li class="list-group-item">Ains<input class="right" type="checkbox" value="ains" name="has[]"></li>
+                <li class="list-group-item">Total :<p class="right"></p></li>
               </ul>
             </div>
+
+            <!-- traitement des données checkbox   -->
+            <?php
+            if(isset($_POST['has'])){
+              scoreHas($_POST['has']);
+            }
+            ?>
+            <!-- traitement des données checkbox   -->
+
           </div>
         </div>
       </div>
@@ -124,10 +162,10 @@
       <div class="panel-body">
         <div class="row">
           <div class="col-sm-6">
-            Contre Indication à l'ETO <input type="checkbox" name="contre_eto" class="right">
+            Contre Indication à l'ETO <input type="checkbox" value="contre_eto" class="right" name="traitement[]">
           </div>
           <div class="col-sm-6">
-            filtre cave <input type="checkbox" name="filtre_cave" class="right">
+            filtre cave <input type="checkbox" value="filtre_cave" class="right" name="traitement[]">
           </div>
         </div>
       </div>
@@ -140,8 +178,17 @@
   <div class="row">
     <div class="col-sm-6">
       <div class="form-group">
-        <input type="text" name="email" class="form-control" placeholder="Email du destinataire">
+        <input type="text" name="mail" class="form-control" placeholder="Email du destinataire">
       </div>
+
+      <!-- traitement des données mail destinataire -->
+      <?php
+      if(isset($_POST['mail'])){
+        sendMail($_POST['mail']);
+      }
+      ?>
+      <!-- traitement des données mail destinataire -->
+
     </div>
     <div class="col-sm-6">
       <input type="submit" class="btn btn-success staff_button" value="Envoyer au staff">
@@ -161,7 +208,7 @@
       <div class="row form-group">
         <div class="col-sm-6">
           <label for="staff_date">Date du staff :</label>
-          <input type="date" name="staff_date">
+          <input type="date" id="datepicker" name="staff_date">
         </div>
         <div class="col-sm-6">
           <label for="close">Eligible à la fermeture :</label>
