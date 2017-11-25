@@ -1,6 +1,6 @@
 <?php include "parts/header.php"; ?>
 <?php include "bdd/pdo.php"; ?>
-<?php include "control/request.php"; ?>
+<?php include "control/function.php"; ?>
 
 <!-- titre -->
 <div class="page-header">
@@ -91,7 +91,7 @@
     if (isset($_POST['firstname']) && isset($_POST['name']) && $_POST['birthday'] && isset($_POST['neuro_hemo'])) {
       patientId($_POST['firstname'], $_POST['name'], $_POST['birthday'], $_POST['neuro_hemo']);
     }else if(isset($_POST['traitement'])){
-      traitmentAction($_POST['traitement']);
+      switchTraitement($_POST['traitement']);
     }
     ?>
     <!-- traitement des données patient et traitement -->
@@ -121,7 +121,7 @@
             <!-- traitement des données score checkbox cha -->
             <?php
               if(isset($_POST['cha'])){
-                scoreCha($_POST['cha']);
+                switchCha($_POST['cha']);
               }
             ?>
             <!-- traitement des données score checkbox cha -->
@@ -131,7 +131,7 @@
                 <li class="list-group-item">HTA<input class="right" type="checkbox" value="hta_has" name="has[]"></li>
                 <li class="list-group-item">Insuffisance hépatique<input class="right" type="checkbox" value="insu_hepatique" name="has[]"></li>
                 <li class="list-group-item">Insufisance rénale<input class="right" type="checkbox" value="insu_renale" name="has[]"></li>
-                <li class="list-group-item">ATCD AIT ou AVC<input class="right" type="checkbox" value="ait" name="has[]"></li>
+                <li class="list-group-item">ATCD AIT ou AVC<input class="right" type="checkbox" value="ait_avc" name="has[]"></li>
                 <li class="list-group-item">Saignement<input class="right" type="checkbox" value="saignement" name="has[]"></li>
                 <li class="list-group-item">INR labile<input class="right" type="checkbox" value="inr" name="has[]"></li>
                 <li class="list-group-item">Age >= 65 ans<input class="right" type="checkbox" value="age_has" name="has[]"></li>
@@ -144,7 +144,7 @@
             <!-- traitement des données checkbox   -->
             <?php
             if(isset($_POST['has'])){
-              scoreHas($_POST['has']);
+              switchHas($_POST['has']);
             }
             ?>
             <!-- traitement des données checkbox   -->

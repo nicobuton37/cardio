@@ -18,80 +18,68 @@ function patientId($firstname, $name, $birthday, $neuro_hemo)
   // echo "Le patient a été créé !";
 }
 
-function traitmentAction($traitement)
+function traitmentAction($aspirine, $thieno, $avk, $naco, $aucun, $contre_eto, $filtre_cave)
 {
-
   global $bdd;
 
-  $aspirine = 0;
-  $thieno = 0;
-  $avk = 0;
-  $naco = 0;
-  $aucun = 0;
-  $contre_eto = 0;
-  $filtre_cave = 0;
-
-
-  foreach ($traitement as $key => $value) {
-    switch ($value) {
-      case 'aspirine':
-        $aspirine = 1;
-        break;
-      case 'thieno':
-        $thieno = 1;
-        break;
-      case 'avk':
-        $avk = 1;
-        break;
-      case 'naco':
-        $naco = 1;
-        break;
-      case 'aucun':
-        $aucun = 1;
-        break;
-      case 'contre_eto':
-        $contre_eto = 1;
-        break;
-      case 'filtre_cave':
-        $filtre_cave = 1;
-        break;
-      default :
-
-        break;
-    }
-  }
-
-  $request = $bdd->prepare("INSERT INTO traitement(aspirine, thieno, avk, naco, aucun, contre_eto, filtre_cave)
-                            VALUES(:aspirine, :thieno, :avk, :naco, :aucun, :contre_eto, :filtre_cave)");
-  $request->execute(array(
-    'aspirine'   => $aspirine,
-    'thieno'     => $thieno,
-    'avk'        => $avk,
-    'naco'       => $naco,
-    'aucun'      => $aucun,
-    'contre_eto' => $contre_eto,
-    'filtre_cave'=> $filtre_cave
-  ));
+  // $request = $bdd->prepare("INSERT INTO traitement(aspirine, thieno, avk, naco, aucun, contre_eto, filtre_cave)
+  //                           VALUES(:aspirine, :thieno, :avk, :naco, :aucun, :contre_eto, :filtre_cave)");
+  // $request->execute(array(
+  //   'aspirine'   => $aspirine,
+  //   'thieno'     => $thieno,
+  //   'avk'        => $avk,
+  //   'naco'       => $naco,
+  //   'aucun'      => $aucun,
+  //   'contre_eto' => $contre_eto,
+  //   'filtre_cave'=> $filtre_cave
+  // ));
 
 }
 
-function scoreCha($cha)
+function chaAction($insu_cardiaque, $hta, $age, $diabete, $atcd, $vasculaire, $age_tranche, $femme)
 {
-  foreach ($cha as $key => $value) {
-    var_dump($value);
-  }
+  global $bdd;
+
+  // $request = $bdd->prepare("INSERT INTO cha(insu_cardiaque, hta, age, diabete, atcd, vasculaire, age_tranche, femme)
+  //                           VALUES(:insu_cardiaque, :hta, :age, :diabete, :atcd, :vasculaire, :age_tranche, :femme)");
+  //
+  // $request->execute(array(
+  //   'insu_cardiaque' => $insu_cardiaque,
+  //   'hta'            => $hta,
+  //   'age'            => $age,
+  //   'diabete'        => $diabete,
+  //   'atcd'           => $atcd,
+  //   'vasculaire'     => $vasculaire,
+  //   'age_tranche'    => $age_tranche,
+  //   'femme'          => $femme
+  // ));
 }
 
-function scoreHas($has)
+function hasAction($hta_has, $insu_hepatique, $insu_renale, $ait_avc, $saignement, $inr, $age_has, $alcool, $ains)
 {
-  foreach ($has as $key => $value) {
-    var_dump($value);
-  }
+  global $bdd;
+
+  // $request = $bdd->prepare("INSERT INTO has(hta_has, insu_hepatique, insu_renale, ait_avc, saignement, inr, age_has, alcool, ains)
+  //                           VALUES(:hta_has, :insu_hepatique, :insu_renale, :ait_avc, :saignement, :inr, :age_has, :alcool, :ains)");
+  //
+  // $request->execute(array(
+  //   'hta_has'        => $hta_has,
+  //   'insu_hepatique' => $insu_hepatique,
+  //   'insu_renale'    => $insu_renale,
+  //   'ait_avc'        => $ait_avc,
+  //   'saignement'     => $saignement,
+  //   'inr'            => $inr,
+  //   'age_has'        => $age_has,
+  //   'alcool'         => $alcool,
+  //   'ains'           => $ains
+  // ));
 }
 
 function doctor($firstname_doc, $name_doc, $mail_doc, $specialite, $cardio)
 {
-  var_dump($firstname_doc, $name_doc, $mail_doc, $specialite, $cardio);
+  global $bdd;
+
+  $request = $bdd->prepare();
 }
 
 function sendMail($mail)
