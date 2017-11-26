@@ -2,332 +2,343 @@
 <?php include "bdd/pdo.php"; ?>
 <?php include "control/function.php"; ?>
 
-<!-- titre -->
-<div class="page-header">
-  <h1>Fiche de liaison Fermeture auricule gauche</h1>
-</div>
-<!-- titre -->
+<?php
+$patient = $bdd->query("SELECT id FROM patient");
+$patient_here = $patient->fetch();
+$patient_exist = $patient_here['id'];
+?>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    Formulaire médecin
+  </div>
+<div class="panel-body">
+  <!-- Formulaire médecin -->
+  <form id="doctor" action="index.php" method="post">
+    <div class="row form-group">
 
-<!-- Formulaire médecin -->
-<form id="doctor" action="index.php" method="post">
-  <div class="row form-group">
-
-    <!-- panel patient -->
-    <div class="col-sm-4">
-      <div class="panel panel-info">
-        <div class="panel-heading">
-          Patient
-        </div>
-        <div class="panel-body">
-          <label for="firstname">Nom :</label>
-          <input type="text" name="firstname" class="form-control">
-          <label for="name">Prénom :</label>
-          <input type="text" name="name" class="form-control">
-          <label for="birthday">Date de naissance :</label>
-          <input type="date" name="birthday" class="form-control" id="datepicker" placeholder="jj/mm/aaaa">
+      <!-- panel patient -->
+      <div class="col-sm-4">
+        <div class="panel panel-info">
+          <div class="panel-heading">
+            Patient
+          </div>
+          <div class="panel-body">
+            <label for="firstname">Nom :</label>
+            <input type="text" name="firstname" class="form-control">
+            <label for="name">Prénom :</label>
+            <input type="text" name="name" class="form-control">
+            <label for="birthday">Date de naissance :</label>
+            <input type="date" name="birthday" class="form-control" id="datepicker">
+          </div>
         </div>
       </div>
-    </div>
-    <!-- panel patient -->
+      <!-- panel patient -->
 
-    <!-- panel médecin -->
-    <div class="col-sm-8">
-      <div class="panel panel-info">
-        <div class="panel-heading">
-          Médecins
-        </div>
-        <div class="panel-body">
-          <div class="row">
-            <div class="col-sm-6">
-              <label for="firstname_doc">Nom :</label>
-              <input type="text" name="firstname_doc" class="form-control">
-              <label for="name_doc">Prénom :</label>
-              <input type="text" name="name_doc" class="form-control">
-              <label for="mail_doc">Email :</label>
-              <input type="text" name="mail_doc" class="form-control">
+      <!-- panel médecin -->
+      <div class="col-sm-8">
+        <div class="panel panel-info">
+          <div class="panel-heading">
+            Médecins
+          </div>
+          <div class="panel-body">
+            <div class="row">
+              <div class="col-sm-6">
+                <label for="firstname_doc">Nom :</label>
+                <input type="text" name="firstname_doc" class="form-control">
+                <label for="name_doc">Prénom :</label>
+                <input type="text" name="name_doc" class="form-control">
+                <label for="mail_doc">Email :</label>
+                <input type="text" name="mail_doc" class="form-control">
+              </div>
+              <div class="col-sm-6">
+                <label for="specialite">Spécialité :</label>
+                <input type="text" name="specialite" class="form-control">
+                <label for="cardio">Cardiologue référent :</label>
+                <input type="text" name="cardio" class="form-control" placeholder="Nom et Prénom">
+              </div>
             </div>
-            <div class="col-sm-6">
-              <label for="specialite">Spécialité :</label>
-              <input type="text" name="specialite" class="form-control">
-              <label for="cardio">Cardiologue référent :</label>
-              <input type="text" name="cardio" class="form-control" placeholder="Nom et Prénom">
+          </div>
+        </div>
+      </div>
+      <!-- panel médecin -->
+    </div>
+    <!-- panel traitement -->
+    <div class="row form-group">
+      <div class="col-sm-4">
+        <div class="panel panel-info">
+          <div class="panel-heading">
+            Traitement actuel
+          </div>
+          <div class="panel-body">
+            <ul class="list-group">
+              <li class="list-group-item">Aspirine<input type="checkbox" class="right" value="aspirine" name="traitement[]"></li>
+              <li class="list-group-item">Thienopyridine<input type="checkbox" class="right" value="thieno" name="traitement[]"></li>
+              <li class="list-group-item">AVK<input type="checkbox" class="right" value="avk" name="traitement[]"></li>
+              <li class="list-group-item">NACO<input type="checkbox" class="right" value="naco" name="traitement[]"></li>
+              <li class="list-group-item">Aucun<input type="checkbox" class="right" value="aucun" name="traitement[]"></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-8">
+        <div class="panel panel-info">
+          <div class="panel-heading">
+            Score
+          </div>
+          <div class="panel-body">
+            <div class="row">
+              <div class="col-sm-6">
+                <ul class="list-group">
+                  <li class="list-group-item">Insuffisance cardiaque<input class="right" type="checkbox" value="insu_cardiaque" name="cha[]"></li>
+                  <li class="list-group-item">HTA<input class="right" type="checkbox" value="hta" name="cha[]"></li>
+                  <li class="list-group-item">Age >= 76 ans<input class="right" type="checkbox" value="age" name="cha[]"></li>
+                  <li class="list-group-item">Diabète<input class="right" type="checkbox" value="diabete" name="cha[]"></li>
+                  <li class="list-group-item">ATCD AIT ou AVC<input class="right" type="checkbox" value="atcd" name="cha[]"></li>
+                  <li class="list-group-item">Vascular Disease<input class="right" type="checkbox" value="vasculaire" name="cha[]"></li>
+                  <li class="list-group-item">Age 65-74 ans<input class="right" type="checkbox" value="age_tranche" name="cha[]"></li>
+                  <li class="list-group-item">Sexe féminin<input class="right" type="checkbox" value="femme" name="cha[]"></li>
+                  <li class="list-group-item">//</li>
+                  <li class="list-group-item">Total :<p class="right"></p></li>
+                </ul>
+              </div>
+              <div class="col-sm-6">
+                <ul class="list-group">
+                  <li class="list-group-item">HTA<input class="right" type="checkbox" value="hta_has" name="has[]"></li>
+                  <li class="list-group-item">Insuffisance hépatique<input class="right" type="checkbox" value="insu_hepatique" name="has[]"></li>
+                  <li class="list-group-item">Insufisance rénale<input class="right" type="checkbox" value="insu_renale" name="has[]"></li>
+                  <li class="list-group-item">ATCD AIT ou AVC<input class="right" type="checkbox" value="ait_avc" name="has[]"></li>
+                  <li class="list-group-item">Saignement<input class="right" type="checkbox" value="saignement" name="has[]"></li>
+                  <li class="list-group-item">INR labile<input class="right" type="checkbox" value="inr" name="has[]"></li>
+                  <li class="list-group-item">Age >= 65 ans<input class="right" type="checkbox" value="age_has" name="has[]"></li>
+                  <li class="list-group-item">Alcool<input class="right" type="checkbox" value="alcool" name="has[]"></li>
+                  <li class="list-group-item">Ains<input class="right" type="checkbox" value="ains" name="has[]"></li>
+                  <li class="list-group-item">Total :<p class="right"></p></li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <!-- panel médecin -->
-
-    <!-- traitement des données du médecins -->
-    <?php
-    if(isset($_POST['firstname_doc']) && isset($_POST['name_doc']) && isset($_POST['mail_doc']) && isset($_POST['specialite']) && isset($_POST['cardio'])){
-      doctor($_POST['firstname_doc'], $_POST['name_doc'], $_POST['mail_doc'], $_POST['specialite'], $_POST['cardio']);
-    }
-    ?>
-    <!-- traitement des données du médecins -->
-
-  </div>
-  <!-- panel traitement -->
-  <div class="row form-group">
-    <div class="col-sm-4">
+    <div class="form-group">
       <div class="panel panel-info">
         <div class="panel-heading">
-          Traitement actuel
+          Détails supplémentaires
         </div>
         <div class="panel-body">
-          <ul class="list-group">
-            <li class="list-group-item">Aspirine<input type="checkbox" class="right" value="aspirine" name="traitement[]"></li>
-            <li class="list-group-item">Thienopyridine<input type="checkbox" class="right" value="thieno" name="traitement[]"></li>
-            <li class="list-group-item">AVK<input type="checkbox" class="right" value="avk" name="traitement[]"></li>
-            <li class="list-group-item">NACO<input type="checkbox" class="right" value="naco" name="traitement[]"></li>
-            <li class="list-group-item">Aucun<input type="checkbox" class="right" value="aucun" name="traitement[]"></li>
-          </ul>
+          <div class="row">
+            <div class="col-sm-6">
+              Contre Indication à l'ETO <input type="checkbox" value="contre_eto" class="right" name="traitement[]">
+            </div>
+            <div class="col-sm-6">
+              filtre cave <input type="checkbox" value="filtre_cave" class="right" name="traitement[]">
+            </div>
+          </div>
         </div>
       </div>
     </div>
+    <div class="form-group">
+      <label for="neuro_hemo">Précisions sur l'histoire neurologique et hémorrogique :</label>
+      <textarea name="neuro_hemo" rows="8" cols="80" class="form-control"></textarea>
+    </div>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="form-group">
+          <input type="text" name="mail" class="form-control" placeholder="Email du destinataire">
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <input type="submit" name="sendStaff" class="btn btn-success staff_button right" value="Envoyer au staff">
+      </div>
+    </div>
 
-    <!-- traitement des données patient et traitement -->
+
+
     <?php
-    if (isset($_POST['firstname']) && isset($_POST['name']) && $_POST['birthday'] && isset($_POST['neuro_hemo'])) {
-      patientId($_POST['firstname'], $_POST['name'], $_POST['birthday'], $_POST['neuro_hemo']);
-    }else if(isset($_POST['traitement'])){
+    if(isset($_POST['has'])){
+      switchHas($_POST['has']);
+    }
+    if(isset($_POST['traitement'])){
       switchTraitement($_POST['traitement']);
     }
+    if(isset($_POST['cha'])){
+      switchCha($_POST['cha']);
+    }
+    if(isset($_POST['firstname_doc']) && isset($_POST['name_doc']) && isset($_POST['mail_doc']) && isset($_POST['specialite']) && isset($_POST['cardio']) && isset($_POST['mail'])){
+      doctorAction($_POST['firstname_doc'], $_POST['name_doc'], $_POST['mail'], $_POST['mail_doc'], $_POST['specialite'], $_POST['cardio']);
+    }
+    if(isset($_POST['firstname']) && isset($_POST['name']) && $_POST['birthday'] && isset($_POST['neuro_hemo'])) {
+      patientAction($_POST['firstname'], $_POST['name'], $_POST['birthday'], $_POST['neuro_hemo']);
+    }
+    if(isset($_POST['mail'])){
+      sendMail($_POST['mail']);
+    }
     ?>
-    <!-- traitement des données patient et traitement -->
 
-    <div class="col-sm-8">
-      <div class="panel panel-info">
-        <div class="panel-heading">
-          Score
-        </div>
-        <div class="panel-body">
-          <div class="row">
-            <div class="col-sm-6">
-              <ul class="list-group">
-                <li class="list-group-item">Insuffisance cardiaque<input class="right" type="checkbox" value="insu_cardiaque" name="cha[]"></li>
-                <li class="list-group-item">HTA<input class="right" type="checkbox" value="hta" name="cha[]"></li>
-                <li class="list-group-item">Age >= 76 ans<input class="right" type="checkbox" value="age" name="cha[]"></li>
-                <li class="list-group-item">Diabète<input class="right" type="checkbox" value="diabete" name="cha[]"></li>
-                <li class="list-group-item">ATCD AIT ou AVC<input class="right" type="checkbox" value="atcd" name="cha[]"></li>
-                <li class="list-group-item">Vascular Disease<input class="right" type="checkbox" value="vasculaire" name="cha[]"></li>
-                <li class="list-group-item">Age 65-74 ans<input class="right" type="checkbox" value="age_tranche" name="cha[]"></li>
-                <li class="list-group-item">Sexe féminin<input class="right" type="checkbox" value="femme" name="cha[]"></li>
-                <li class="list-group-item">//</li>
-                <li class="list-group-item">Total :<p class="right"></p></li>
-              </ul>
-            </div>
 
-            <!-- traitement des données score checkbox cha -->
-            <?php
-              if(isset($_POST['cha'])){
-                switchCha($_POST['cha']);
-              }
-            ?>
-            <!-- traitement des données score checkbox cha -->
-
-            <div class="col-sm-6">
-              <ul class="list-group">
-                <li class="list-group-item">HTA<input class="right" type="checkbox" value="hta_has" name="has[]"></li>
-                <li class="list-group-item">Insuffisance hépatique<input class="right" type="checkbox" value="insu_hepatique" name="has[]"></li>
-                <li class="list-group-item">Insufisance rénale<input class="right" type="checkbox" value="insu_renale" name="has[]"></li>
-                <li class="list-group-item">ATCD AIT ou AVC<input class="right" type="checkbox" value="ait_avc" name="has[]"></li>
-                <li class="list-group-item">Saignement<input class="right" type="checkbox" value="saignement" name="has[]"></li>
-                <li class="list-group-item">INR labile<input class="right" type="checkbox" value="inr" name="has[]"></li>
-                <li class="list-group-item">Age >= 65 ans<input class="right" type="checkbox" value="age_has" name="has[]"></li>
-                <li class="list-group-item">Alcool<input class="right" type="checkbox" value="alcool" name="has[]"></li>
-                <li class="list-group-item">Ains<input class="right" type="checkbox" value="ains" name="has[]"></li>
-                <li class="list-group-item">Total :<p class="right"></p></li>
-              </ul>
-            </div>
-
-            <!-- traitement des données checkbox   -->
-            <?php
-            if(isset($_POST['has'])){
-              switchHas($_POST['has']);
-            }
-            ?>
-            <!-- traitement des données checkbox   -->
-
-          </div>
-        </div>
-      </div>
-    </div>
+  </form>
+  <!-- Formulaire médecin -->
   </div>
-  <div class="form-group">
-    <div class="panel panel-info">
-      <div class="panel-heading">
-        Détails supplémentaires
-      </div>
-      <div class="panel-body">
-        <div class="row">
-          <div class="col-sm-6">
-            Contre Indication à l'ETO <input type="checkbox" value="contre_eto" class="right" name="traitement[]">
-          </div>
-          <div class="col-sm-6">
-            filtre cave <input type="checkbox" value="filtre_cave" class="right" name="traitement[]">
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="form-group">
-    <label for="neuro_hemo">Précisions sur l'histoire neurologique et hémorrogique :</label>
-    <textarea name="neuro_hemo" rows="8" cols="80" class="form-control"></textarea>
-  </div>
-  <div class="row">
-    <div class="col-sm-6">
-      <div class="form-group">
-        <input type="text" name="mail" class="form-control" placeholder="Email du destinataire">
-      </div>
+</div>
 
-      <!-- traitement des données mail destinataire -->
-      <?php
-      if(isset($_POST['mail'])){
-        sendMail($_POST['mail']);
-      }
-      ?>
-      <!-- traitement des données mail destinataire -->
+<?php
+$req = $bdd->query("SELECT id FROM patient");
+$response = $req->fetch();
+getPatientId($response['id']);
+?>
 
-    </div>
-    <div class="col-sm-6">
-      <input type="submit" class="btn btn-success staff_button" value="Envoyer au staff">
-    </div>
-  </div>
-</form>
-<!-- Formulaire médecin -->
 <!-- Formulaire staff -->
-<div class="panel panel-info">
+<div class="panel panel-default" id="panel_staff"  <?= !isset($_GET['id']) ? 'hidden' : ''; ?>>
   <div class="panel-heading">
-    Décision du staf
+    Formulaire Staff
   </div>
-  <form id="staff" action="index.php" method="post">
-    <div class="panel-body">
-
-      <!-- date et fermeture -->
-      <div class="row form-group">
-        <div class="col-sm-6">
-          <label for="staff_date">Date du staff :</label>
-          <input type="date" id="datepicker" name="staff_date">
-        </div>
-        <div class="col-sm-6">
-          <label for="close">Eligible à la fermeture :</label>
-          <div class="btn-group" data-toggle="buttons">
-            <label class="btn btn-warning">
-              <input type="radio" name="close" value="oui" autocomplete="off">OUI
-            </label>
-            <label class="btn btn-warning">
-              <input type="radio" name="close" value="non" autocomplete="off">NON
-            </label>
-          </div>
-        </div>
-      </div>
-      <!-- date et fermeture -->
-
-      <!-- Avis staff -->
-      <div class="row form-group">
-        <div class="col-sm-6">
-          <label for="examen">Examens / Avis conditionnant la décision :</label>
-          <textarea name="examen" rows="8" cols="80" class="form-control"></textarea>
-        </div>
-        <div class="col-sm-6">
-          <label for="post_op">Gestion prévisible et durée du traitement AAP / AVK en post-op :</label>
-          <textarea name="post_op" rows="8" cols="80" class="form-control"></textarea>
-        </div>
-      </div>
-      <!-- Avis staff -->
-
-      <!-- Exam avant fermeture et suivi post implantation -->
-      <div class="row form-group">
-        <div class="col-sm-6">
-          <div class="panel panel-info">
-            <div class="panel-heading">
-              Examens à programmer avant fermeture
-            </div>
-            <div class="panel-body">
-              <ul class="list-group">
-                <li class="list-group-item">Cs anesthésie<input type="checkbox" name="anesthesie" class="right"></li>
-                <li class="list-group-item">ETO<input type="checkbox" name="eto_close" class="right"></li>
-                <li class="list-group-item">TDM coeur<input type="checkbox" name="tdm_coeur" class="right"></li>
-                <li class="list-group-item">TDM cérébral / IRM<input type="checkbox" name="tdm_cerebral" class="right"></li>
-                <li class="list-group-item">Avis gériatrique<input type="checkbox" name="geriatrique" class="right"></li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-6">
-          <div class="panel panel-info">
-            <div class="panel-heading">
-              Suivi post implantation
-            </div>
-            <div class="panel-body">
-              <ul class="list-group">
-                <li class="list-group-item">
-                  ETO :
-                  <div class="btn-group right"  data-toggle="buttons">
-                    <label class="btn btn-warning">
-                      <input type="radio" name="eto_imp" value="1 mois" autocomplete="off">1 mois
-                    </label>
-                    <label class="btn btn-warning">
-                      <input type="radio" name="eto_imp" value="3 mois" autocomplete="off">3 mois
-                    </label>
-                  </div>
-                </li>
-                <li class="list-group-item">ETT :
-                  <div class="btn-group right"  data-toggle="buttons">
-                    <label class="btn btn-warning">
-                      <input type="radio" name="ett_imp" value="1 mois" autocomplete="off">1 mois
-                    </label>
-                    <label class="btn btn-warning">
-                      <input type="radio" name="ett_imp" value="3 mois" autocomplete="off">3 mois
-                    </label>
-                  </div>
-                </li>
-                <li class="list-group-item">Scanner cardiaque :
-                  <div class="btn-group right"  data-toggle="buttons">
-                    <label class="btn btn-warning">
-                      <input type="radio" name="scanner" value="1 mois" autocomplete="off">1 mois
-                    </label>
-                    <label class="btn btn-warning">
-                      <input type="radio" name="scanner" value="3 mois" autocomplete="off">3 mois
-                    </label>
-                  </div>
-                </li>
-                <li class="list-group-item">Cs neuro :
-                  <div class="btn-group right"  data-toggle="buttons">
-                    <label class="btn btn-warning">
-                      <input type="radio" name="cs_neuro" value="1 mois" autocomplete="off">1 mois
-                    </label>
-                    <label class="btn btn-warning">
-                      <input type="radio" name="cs_neuro" value="3 mois" autocomplete="off">3 mois
-                    </label>
-                  </div>
-                </li>
-                <li class="list-group-item">Cs cardio :
-                  <div class="btn-group right"  data-toggle="buttons">
-                    <label class="btn btn-warning">
-                      <input type="radio" name="cs_cardio" value="1 mois" autocomplete="off">1 mois
-                    </label>
-                    <label class="btn btn-warning">
-                      <input type="radio" name="cs_cardio" value="3 mois" autocomplete="off">3 mois
-                    </label>
-                  </div>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- Exam avant fermeture et suivi post implantation -->
-
+<div class="panel-body">
+  <div class="panel panel-info">
+    <div class="panel-heading">
+      Décision du staf
     </div>
-  </div>
-  <div class="form-group">
-    <input type="submit" class="btn btn-success" value="Envoyer">
-  </div>
+    <form id="staff" action="index.php" method="post">
+      <div class="panel-body">
 
+        <!-- date et fermeture -->
+        <div class="row form-group">
+          <div class="col-sm-6">
+            <label for="staff_date">Date du staff :</label>
+            <input type="date" id="datepickerheader("Location:index.php");" name="staff_date">
+          </div>
+          <div class="col-sm-6">
+            <label for="close">Eligible à la fermeture :</label>
+            <div class="btn-group" data-toggle="buttons">
+              <label class="btn btn-warning">
+                <input type="radio" name="close" value="oui" autocomplete="off">OUI
+              </label>
+              <label class="btn btn-warning">
+                <input type="radio" name="close" value="non" autocomplete="off">NON
+              </label>
+            </div>
+          </div>
+        </div>
+        <!-- date et fermeture -->
 
-</form>
+        <!-- Avis staff -->
+        <div class="row form-group">
+          <div class="col-sm-6">
+            <label for="examen">Examens / Avis conditionnant la décision :</label>
+            <textarea name="examen" rows="8" cols="80" class="form-control"></textarea>
+          </div>
+          <div class="col-sm-6">
+            <label for="post_op">Gestion prévisible et durée du traitement AAP / AVK en post-op :</label>
+            <textarea name="post_op" rows="8" cols="80" class="form-control"></textarea>
+          </div>
+        </div>
+        <!-- Avis staff -->
+
+        <!-- Exam avant fermeture et suivi post implantation -->
+        <div class="row form-group">
+          <div class="col-sm-6">
+            <div class="panel panel-info">
+              <div class="panel-heading">
+                Examens à programmer avant fermeture
+              </div>
+              <div class="panel-body">
+                <ul class="list-group">
+                  <li class="list-group-item">Cs anesthésie<input type="checkbox" value="anesthesie" name="post_close[]" class="right"></li>
+                  <li class="list-group-item">ETO<input type="checkbox" value="eto_close" class="right" name="post_close[]"></li>
+                  <li class="list-group-item">TDM coeur<input type="checkbox" value="tdm_coeur" class="right" name="post_close[]"></li>
+                  <li class="list-group-item">TDM cérébral / IRM<input type="checkbox" value="tdm_cerebral" class="right" name="post_close[]"></li>
+                  <li class="list-group-item">Avis gériatrique<input type="checkbox" value="geriatrique" class="right" name="post_close[]"></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="panel panel-info">
+              <div class="panel-heading">
+                Suivi post implantation
+              </div>
+              <div class="panel-body">
+                <ul class="list-group">
+                  <li class="list-group-item">
+                    ETO
+                    <div class="btn-group right"  data-toggle="buttons">
+                      <label class="btn btn-warning">
+                        <input type="radio" name="eto_imp" value="1 mois" autocomplete="off">1 mois
+                      </label>
+                      <label class="btn btn-warning">
+                        <input type="radio" name="eto_imp" value="3 mois" autocomplete="off">3 mois
+                      </label>
+                    </div>
+                  </li>
+                  <li class="list-group-item">ETT
+                    <div class="btn-group right"  data-toggle="buttons">
+                      <label class="btn btn-warning">
+                        <input type="radio" name="ett_imp" value="1 mois" autocomplete="off">1 mois
+                      </label>
+                      <label class="btn btn-warning">
+                        <input type="radio" name="ett_imp" value="3 mois" autocomplete="off">3 mois
+                      </label>
+                    </div>
+                  </li>
+                  <li class="list-group-item">Scanner cardiaque
+                    <div class="btn-group right"  data-toggle="buttons">
+                      <label class="btn btn-warning">
+                        <input type="radio" name="scanner" value="1 mois" autocomplete="off">1 mois
+                      </label>
+                      <label class="btn btn-warning">
+                        <input type="radio" name="scanner" value="3 mois" autocomplete="off">3 mois
+                      </label>
+                    </div>
+                  </li>
+                  <li class="list-group-item">Cs neuro
+                    <div class="btn-group right"  data-toggle="buttons">
+                      <label class="btn btn-warning">
+                        <input type="radio" name="cs_neuro" value="1 mois" autocomplete="off">1 mois
+                      </label>
+                      <label class="btn btn-warning">
+                        <input type="radio" name="cs_neuro" value="3 mois" autocomplete="off">3 mois
+                      </label>
+                    </div>
+                  </li>
+                  <li class="list-group-item">Cs cardio
+                    <div class="btn-group right"  data-toggle="buttons">
+                      <label class="btn btn-warning">
+                        <input type="radio" name="cs_cardio" value="1 mois" autocomplete="off">1 mois
+                      </label>
+                      <label class="btn btn-warning">
+                        <input type="radio" name="cs_cardio" value="3 mois" autocomplete="off">3 mois
+                      </label>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Exam avant fermeture et suivi post implantation -->
+
+      </div>
+    </div>
+    <div class="form-group">
+      <input type="submit" class="btn btn-success right" value="Envoyer">
+    </div>
+
+  <?php
+  if (isset($_POST['post_close'])) {
+    switchPostClose($_POST['post_close']);
+  }
+  if (isset($_POST['eto_imp']) && isset($_POST['ett_imp']) && isset($_POST['scanner']) && isset($_POST['cs_neuro']) && isset($_POST['cs_cardio'])) {
+    postImpAction($_POST['eto_imp'], $_POST['ett_imp'], $_POST['scanner'], $_POST['cs_neuro'], $_POST['cs_cardio']);
+  }
+  if(isset($_POST['staff_date']) && isset($_POST['close']) && isset($_POST['examen']) && isset($_POST['post_op'])) {
+    staffAction($_POST['staff_date'], $_POST['close'], $_POST['examen'], $_POST['post_op']);
+  }
+  ?>
+
+  </form>
+</div>
+
+</div>
+
 
 <!-- Formulaire staff -->
 <?php include "parts/footer.php"; ?>

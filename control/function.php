@@ -155,16 +155,50 @@ function switchHas($has)
         break;
     }
   }
-  echo('hta_has => '. $hta_has . "</br>" .
-        'insu_hepatique => ' . $insu_hepatique . '</br>' .
-        'insu_renale => ' . $insu_renale . "</br>" .
-        'ait_avc => ' . $ait_avc . "</br>" .
-        'saignement => ' . $saignement . "</br>" .
-        'inr => ' . $inr . "</br>" .
-        'age_has => ' . $age_has . "</br>" .
-        'alcool => ' . $alcool . "</br>" .
-        'ains => ' . $ains);
+  // echo('hta_has => '. $hta_has . "</br>" .
+  //       'insu_hepatique => ' . $insu_hepatique . '</br>' .
+  //       'insu_renale => ' . $insu_renale . "</br>" .
+  //       'ait_avc => ' . $ait_avc . "</br>" .
+  //       'saignement => ' . $saignement . "</br>" .
+  //       'inr => ' . $inr . "</br>" .
+  //       'age_has => ' . $age_has . "</br>" .
+  //       'alcool => ' . $alcool . "</br>" .
+  //       'ains => ' . $ains);
 
   hasAction($hta_has, $insu_hepatique, $insu_renale, $ait_avc, $saignement, $inr, $age_has, $alcool, $ains);
 
+}
+
+function switchPostClose($post_close)
+{
+  $anesthesie = 0;
+  $eto_close = 0;
+  $tdm_coeur = 0;
+  $tdm_cerebral = 0;
+  $geriatrique = 0;
+
+  foreach ($post_close as $key => $value) {
+    switch ($value) {
+      case 'anesthesie':
+        $anesthesie = 1;
+        break;
+      case 'eto_close':
+        $eto_close = 1;
+        break;
+      case 'tdm_coeur':
+        $tdm_coeur = 1;
+        break;
+      case 'tdm_cerebral':
+        $tdm_cerebral = 1;
+        break;
+      case 'geriatrique':
+        $geriatrique = 1;
+        break;
+
+      default:
+
+        break;
+    }
+  }
+  postCloseAction($anesthesie, $eto_close, $tdm_coeur, $tdm_cerebral, $geriatrique);
 }

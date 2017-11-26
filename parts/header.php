@@ -20,3 +20,8 @@
   </head>
   <body>
     <div class="container">
+      <!-- titre -->
+      <div class="page-header">
+        <h1>Fiche de liaison Fermeture auricule gauche</h1>
+      </div>
+      <!-- titre -->
