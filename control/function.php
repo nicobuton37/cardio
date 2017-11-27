@@ -105,7 +105,6 @@ function switchCha($cha)
   //       'vasculaire => ' . $vasculaire . "</br>" .
   //       'age_tranche => ' . $age_tranche . "</br>" .
   //       'femme => ' . $femme);
-
   chaAction($insu_cardiaque, $hta, $age, $diabete, $atcd, $vasculaire, $age_tranche, $femme);
 }
 
@@ -168,6 +167,7 @@ function switchHas($has)
   hasAction($hta_has, $insu_hepatique, $insu_renale, $ait_avc, $saignement, $inr, $age_has, $alcool, $ains);
 
 }
+
 
 function switchPostClose($post_close)
 {

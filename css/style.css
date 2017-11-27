@@ -9,3 +9,17 @@
 body {
   background: #c7c9cc;
 }
+
+.center {
+  height: 170px;
+  width: 300px;
+  margin: 0 auto;
+}
+
+.confirm {
+  margin-top:5px;
+}
+
+.btn_center {
+  margin-top: 7px;
+}

@@ -3,9 +3,24 @@
 <?php include "control/function.php"; ?>
 
 <?php
-$patient = $bdd->query("SELECT id FROM patient");
-$patient_here = $patient->fetch();
-$patient_exist = $patient_here['id'];
+if(isset($_GET['id'])){
+  $patient_id = $_GET['id'];
+  $patient = $bdd->query("SELECT * FROM patient WHERE id='$patient_id'");
+  $patient_datas = $patient->fetch();
+
+
+  $doctor = $bdd->query("SELECT * FROM doctor");
+  $doctor_datas = $doctor->fetch();
+
+  $traitement = $bdd->query("SELECT * FROM traitement WHERE id=(SELECT traitment_id FROM patient WHERE id='$patient_id')");
+  $traitement_datas = $traitement->fetch();
+
+  $cha = $bdd->query("SELECT * FROM cha WHERE id=(SELECT cha_id FROM patient WHERE id='$patient_id')");
+  $cha_datas = $cha->fetch();
+
+  $has = $bdd->query("SELECT * FROM has WHERE id=(SELECT has_id FROM patient WHERE id='$patient_id')");
+  $has_datas = $has->fetch();
+}
 ?>
 <div class="panel panel-default">
   <div class="panel-heading">
@@ -13,7 +28,7 @@ $patient_exist = $patient_here['id'];
   </div>
 <div class="panel-body">
   <!-- Formulaire médecin -->
-  <form id="doctor" action="index.php" method="post">
+  <form id="doctor" action="toStaff.php" method="post">
     <div class="row form-group">
 
       <!-- panel patient -->
@@ -24,11 +39,11 @@ $patient_exist = $patient_here['id'];
           </div>
           <div class="panel-body">
             <label for="firstname">Nom :</label>
-            <input type="text" name="firstname" class="form-control">
+            <input type="text" name="firstname" class="form-control" value="<?= isset($_GET['id']) ? $patient_datas['firstname'] : ''; ?>" <?= isset($_GET['id']) ? 'disabled' : ''; ?>>
             <label for="name">Prénom :</label>
-            <input type="text" name="name" class="form-control">
+            <input type="text" name="name" class="form-control" value="<?= isset($_GET['id']) ? $patient_datas['name'] : ''; ?>" <?= isset($_GET['id']) ? 'disabled' : ''; ?>>
             <label for="birthday">Date de naissance :</label>
-            <input type="date" name="birthday" class="form-control" id="datepicker">
+            <input type="date" name="birthday" class="form-control" id="datepicker" value="<?= isset($_GET['id']) ? $patient_datas['birthday'] : ''; ?>" <?= isset($_GET['id']) ? 'disabled' : ''; ?>>
           </div>
         </div>
       </div>
@@ -44,17 +59,17 @@ $patient_exist = $patient_here['id'];
             <div class="row">
               <div class="col-sm-6">
                 <label for="firstname_doc">Nom :</label>
-                <input type="text" name="firstname_doc" class="form-control">
+                <input type="text" name="firstname_doc" class="form-control"  value="<?= isset($_GET['id']) ? $doctor_datas['firstname_doc'] : ''; ?>" <?= isset($_GET['id']) ? 'disabled' : ''; ?>>
                 <label for="name_doc">Prénom :</label>
-                <input type="text" name="name_doc" class="form-control">
+                <input type="text" name="name_doc" class="form-control"  value="<?= isset($_GET['id']) ? $doctor_datas['name_doc'] : ''; ?>" <?= isset($_GET['id']) ? 'disabled' : ''; ?>>
                 <label for="mail_doc">Email :</label>
-                <input type="text" name="mail_doc" class="form-control">
+                <input type="text" name="mail_doc" class="form-control" value="<?= isset($_GET['id']) ? $doctor_datas['mail_doc'] : ''; ?>" <?= isset($_GET['id']) ? 'disabled' : ''; ?>>
               </div>
               <div class="col-sm-6">
                 <label for="specialite">Spécialité :</label>
-                <input type="text" name="specialite" class="form-control">
+                <input type="text" name="specialite" class="form-control" value="<?= isset($_GET['id']) ? $doctor_datas['specialite'] : ''; ?>" <?= isset($_GET['id']) ? 'disabled' : ''; ?>>
                 <label for="cardio">Cardiologue référent :</label>
-                <input type="text" name="cardio" class="form-control" placeholder="Nom et Prénom">
+                <input type="text" name="cardio" class="form-control" placeholder="Nom et Prénom" value="<?= isset($_GET['id']) ? $doctor_datas['cardio'] : ''; ?>" <?= isset($_GET['id']) ? 'disabled' : ''; ?>>
               </div>
             </div>
           </div>
@@ -71,11 +86,11 @@ $patient_exist = $patient_here['id'];
           </div>
           <div class="panel-body">
             <ul class="list-group">
-              <li class="list-group-item">Aspirine<input type="checkbox" class="right" value="aspirine" name="traitement[]"></li>
-              <li class="list-group-item">Thienopyridine<input type="checkbox" class="right" value="thieno" name="traitement[]"></li>
-              <li class="list-group-item">AVK<input type="checkbox" class="right" value="avk" name="traitement[]"></li>
-              <li class="list-group-item">NACO<input type="checkbox" class="right" value="naco" name="traitement[]"></li>
-              <li class="list-group-item">Aucun<input type="checkbox" class="right" value="aucun" name="traitement[]"></li>
+              <li class="list-group-item">Aspirine<input type="checkbox" class="right" value="aspirine" name="traitement[]" <?= isset($_GET['id']) && $traitement_datas['aspirine'] === '1' ? "checked='checked'" : '' ;?>></li>
+              <li class="list-group-item">Thienopyridine<input type="checkbox" class="right" value="thieno" name="traitement[]"x<?= isset($_GET['id']) && $traitement_datas['thieno'] === '1' ? "checked='checked'" : "" ;?>></li>
+              <li class="list-group-item">AVK<input type="checkbox" class="right" value="avk" name="traitement[]" <?= isset($_GET['id']) && $traitement_datas['avk'] === '1' ? "checked='checked'" : "" ;?>></li>
+              <li class="list-group-item">NACO<input type="checkbox" class="right" value="naco" name="traitement[]" <?= isset($_GET['id']) && $traitement_datas['naco'] === '1' ? "checked='checked'" : "" ;?>></li>
+              <li class="list-group-item">Aucun<input type="checkbox" class="right" value="aucun" name="traitement[]" <?= isset($_GET['id']) && $traitement_datas['aucun'] === '1' ? "checked='checked'" : "" ;?>></li>
             </ul>
           </div>
         </div>
@@ -89,30 +104,30 @@ $patient_exist = $patient_here['id'];
             <div class="row">
               <div class="col-sm-6">
                 <ul class="list-group">
-                  <li class="list-group-item">Insuffisance cardiaque<input class="right" type="checkbox" value="insu_cardiaque" name="cha[]"></li>
-                  <li class="list-group-item">HTA<input class="right" type="checkbox" value="hta" name="cha[]"></li>
-                  <li class="list-group-item">Age >= 76 ans<input class="right" type="checkbox" value="age" name="cha[]"></li>
-                  <li class="list-group-item">Diabète<input class="right" type="checkbox" value="diabete" name="cha[]"></li>
-                  <li class="list-group-item">ATCD AIT ou AVC<input class="right" type="checkbox" value="atcd" name="cha[]"></li>
-                  <li class="list-group-item">Vascular Disease<input class="right" type="checkbox" value="vasculaire" name="cha[]"></li>
-                  <li class="list-group-item">Age 65-74 ans<input class="right" type="checkbox" value="age_tranche" name="cha[]"></li>
-                  <li class="list-group-item">Sexe féminin<input class="right" type="checkbox" value="femme" name="cha[]"></li>
+                  <li class="list-group-item">Insuffisance cardiaque<input class="right" type="checkbox" value="insu_cardiaque" name="cha[]" <?= isset($_GET['id']) && $cha_datas['insu_cardiaque'] === '1' ? "checked='checked'" : ""; ?>></li>
+                  <li class="list-group-item">HTA<input class="right" type="checkbox" value="hta" name="cha[]" <?= isset($_GET['id']) && $cha_datas['hta'] === '1' ? "checked='checked'" : ""; ?>></li>
+                  <li class="list-group-item">Age >= 76 ans<input class="right" type="checkbox" value="age" name="cha[]" <?= isset($_GET['id']) && $cha_datas['age'] === '1' ? "checked='checked'" : ""; ?>></li>
+                  <li class="list-group-item">Diabète<input class="right" type="checkbox" value="diabete" name="cha[]" <?= isset($_GET['id']) && $cha_datas['diabete'] === '1' ? "checked='checked'" : ""; ?>></li>
+                  <li class="list-group-item">ATCD AIT ou AVC<input class="right" type="checkbox" value="atcd" name="cha[]" <?= isset($_GET['id']) && $cha_datas['atcd'] === '1' ? "checked='checked'" : ""; ?>></li>
+                  <li class="list-group-item">Vascular Disease<input class="right" type="checkbox" value="vasculaire" name="cha[]" <?= isset($_GET['id']) && $cha_datas['vasculaire'] === '1' ? "checked='checked'" : ""; ?>></li>
+                  <li class="list-group-item">Age 65-74 ans<input class="right" type="checkbox" value="age_tranche" name="cha[]" <?= isset($_GET['id']) && $cha_datas['age_tranche'] === '1' ? "checked='checked'" : ""; ?>></li>
+                  <li class="list-group-item">Sexe féminin<input class="right" type="checkbox" value="femme" name="cha[]" <?= isset($_GET['id']) && $cha_datas['femme'] === '1' ? "checked='checked'" : ""; ?>></li>
                   <li class="list-group-item">//</li>
-                  <li class="list-group-item">Total :<p class="right"></p></li>
+                  <li class="list-group-item">Total :<p class="right"><?= isset($_GET['id']) ? scoreCha() : ""; ?></p></li>
                 </ul>
               </div>
               <div class="col-sm-6">
                 <ul class="list-group">
-                  <li class="list-group-item">HTA<input class="right" type="checkbox" value="hta_has" name="has[]"></li>
-                  <li class="list-group-item">Insuffisance hépatique<input class="right" type="checkbox" value="insu_hepatique" name="has[]"></li>
-                  <li class="list-group-item">Insufisance rénale<input class="right" type="checkbox" value="insu_renale" name="has[]"></li>
-                  <li class="list-group-item">ATCD AIT ou AVC<input class="right" type="checkbox" value="ait_avc" name="has[]"></li>
-                  <li class="list-group-item">Saignement<input class="right" type="checkbox" value="saignement" name="has[]"></li>
-                  <li class="list-group-item">INR labile<input class="right" type="checkbox" value="inr" name="has[]"></li>
-                  <li class="list-group-item">Age >= 65 ans<input class="right" type="checkbox" value="age_has" name="has[]"></li>
-                  <li class="list-group-item">Alcool<input class="right" type="checkbox" value="alcool" name="has[]"></li>
-                  <li class="list-group-item">Ains<input class="right" type="checkbox" value="ains" name="has[]"></li>
-                  <li class="list-group-item">Total :<p class="right"></p></li>
+                  <li class="list-group-item">HTA<input class="right" type="checkbox" value="hta_has" name="has[]" <?= isset($_GET['id']) && $has_datas['hta_has'] === '1' ? "checked='checked'" : ""; ?>></li>
+                  <li class="list-group-item">Insuffisance hépatique<input class="right" type="checkbox" value="insu_hepatique" name="has[]" <?= isset($_GET['id']) && $has_datas['insu_hepatique'] === '1' ? "checked='checked'" : ""; ?>></li>
+                  <li class="list-group-item">Insufisance rénale<input class="right" type="checkbox" value="insu_renale" name="has[]" <?= isset($_GET['id']) && $has_datas['insu_renale'] === '1' ? "checked='checked'" : ""; ?>></li>
+                  <li class="list-group-item">ATCD AIT ou AVC<input class="right" type="checkbox" value="ait_avc" name="has[]" <?= isset($_GET['id']) && $has_datas['ait_avc'] === '1' ? "checked='checked'" : ""; ?>></li>
+                  <li class="list-group-item">Saignement<input class="right" type="checkbox" value="saignement" name="has[]" <?= isset($_GET['id']) && $has_datas['saignement'] === '1' ? "checked='checked'" : ""; ?>></li>
+                  <li class="list-group-item">INR labile<input class="right" type="checkbox" value="inr" name="has[]" <?= isset($_GET['id']) && $has_datas['inr'] === '1' ? "checked='checked'" : ""; ?>></li>
+                  <li class="list-group-item">Age >= 65 ans<input class="right" type="checkbox" value="age_has" name="has[]" <?= isset($_GET['id']) && $has_datas['age_has'] === '1' ? "checked='checked'" : ""; ?>></li>
+                  <li class="list-group-item">Alcool<input class="right" type="checkbox" value="alcool" name="has[]" <?= isset($_GET['id']) && $has_datas['alcool'] === '1' ? "checked='checked'" : ""; ?>></li>
+                  <li class="list-group-item">Ains<input class="right" type="checkbox" value="ains" name="has[]" <?= isset($_GET['id']) && $has_datas['ains'] === '1' ? "checked='checked'" : ""; ?>></li>
+                  <li class="list-group-item">Total :<p class="right"><?= isset($_GET['id']) ? scoreHas() : ""; ?></p></li>
                 </ul>
               </div>
             </div>
@@ -128,10 +143,10 @@ $patient_exist = $patient_here['id'];
         <div class="panel-body">
           <div class="row">
             <div class="col-sm-6">
-              Contre Indication à l'ETO <input type="checkbox" value="contre_eto" class="right" name="traitement[]">
+              Contre Indication à l'ETO <input type="checkbox" value="contre_eto" class="right" name="traitement[]" <?= isset($_GET['id']) && $traitement_datas['contre_eto'] === '1' ? "checked='checked'" : "" ;?>>
             </div>
             <div class="col-sm-6">
-              filtre cave <input type="checkbox" value="filtre_cave" class="right" name="traitement[]">
+              filtre cave <input type="checkbox" value="filtre_cave" class="right" name="traitement[]" <?= isset($_GET['id']) && $traitement_datas['filtre_cave'] === '1' ? "checked='checked'" : "" ;?>>
             </div>
           </div>
         </div>
@@ -139,41 +154,26 @@ $patient_exist = $patient_here['id'];
     </div>
     <div class="form-group">
       <label for="neuro_hemo">Précisions sur l'histoire neurologique et hémorrogique :</label>
-      <textarea name="neuro_hemo" rows="8" cols="80" class="form-control"></textarea>
+      <textarea name="neuro_hemo" rows="8" cols="80" class="form-control" <?= isset($_GET['id']) ? "disabled" : '' ?>><?= isset($_GET['id']) ? $patient_datas['neuro_hemo'] : ''; ?></textarea>
     </div>
     <div class="row">
       <div class="col-sm-6">
         <div class="form-group">
-          <input type="text" name="mail" class="form-control" placeholder="Email du destinataire">
+          <input type="text" name="mail" class="form-control" placeholder="Email du destinataire" value="<?= isset($_GET['id']) ? $doctor_datas['mail'] : ""; ?>" <?= isset($_GET['id']) ? 'disabled' : ''; ?>>
         </div>
       </div>
       <div class="col-sm-6">
-        <input type="submit" name="sendStaff" class="btn btn-success staff_button right" value="Envoyer au staff">
+        <?php
+        if(!isset($_GET['id'])){
+          echo "<input type='submit' class='btn btn-success staff_button right' value='Envoyer au staff'>";
+        }
+        ?>
       </div>
     </div>
 
 
 
-    <?php
-    if(isset($_POST['has'])){
-      switchHas($_POST['has']);
-    }
-    if(isset($_POST['traitement'])){
-      switchTraitement($_POST['traitement']);
-    }
-    if(isset($_POST['cha'])){
-      switchCha($_POST['cha']);
-    }
-    if(isset($_POST['firstname_doc']) && isset($_POST['name_doc']) && isset($_POST['mail_doc']) && isset($_POST['specialite']) && isset($_POST['cardio']) && isset($_POST['mail'])){
-      doctorAction($_POST['firstname_doc'], $_POST['name_doc'], $_POST['mail'], $_POST['mail_doc'], $_POST['specialite'], $_POST['cardio']);
-    }
-    if(isset($_POST['firstname']) && isset($_POST['name']) && $_POST['birthday'] && isset($_POST['neuro_hemo'])) {
-      patientAction($_POST['firstname'], $_POST['name'], $_POST['birthday'], $_POST['neuro_hemo']);
-    }
-    if(isset($_POST['mail'])){
-      sendMail($_POST['mail']);
-    }
-    ?>
+
 
 
   </form>
@@ -185,6 +185,17 @@ $patient_exist = $patient_here['id'];
 $req = $bdd->query("SELECT id FROM patient");
 $response = $req->fetch();
 getPatientId($response['id']);
+
+if(isset($_GET['id']) && isset($_GET['docid'])){
+  $staff = $bdd->query("SELECT * FROM staf");
+  $staff_datas = $staff->fetch();
+
+  $post_close = $bdd->query("SELECT * FROM post_close");
+  $post_close_datas = $post_close->fetch();
+
+  $post_imp = $bdd->query("SELECT * FROM post_imp");
+  $post_imp_datas = $post_imp->fetch();
+}
 ?>
 
 <!-- Formulaire staff -->
@@ -197,24 +208,20 @@ getPatientId($response['id']);
     <div class="panel-heading">
       Décision du staf
     </div>
-    <form id="staff" action="index.php" method="post">
+    <form id="staff" action="toDoctor.php?id=<?= $_GET['id']; ?>" method="post">
       <div class="panel-body">
 
         <!-- date et fermeture -->
         <div class="row form-group">
           <div class="col-sm-6">
             <label for="staff_date">Date du staff :</label>
-            <input type="date" id="datepickerheader("Location:index.php");" name="staff_date">
+            <input type="date" id="datepicker" name="staff_date" value="<?= isset($_GET['docid']) ? $staff_datas['staff_date'] : ''; ?>" <?= isset($_GET['docid']) ? 'disabled' : ''; ?>>
           </div>
           <div class="col-sm-6">
             <label for="close">Eligible à la fermeture :</label>
             <div class="btn-group" data-toggle="buttons">
-              <label class="btn btn-warning">
-                <input type="radio" name="close" value="oui" autocomplete="off">OUI
-              </label>
-              <label class="btn btn-warning">
-                <input type="radio" name="close" value="non" autocomplete="off">NON
-              </label>
+                <input type="radio" name="close" value="oui" <?= isset($_GET['docid']) && $staff_datas['close'] === 'oui' ? "checked='checked'" : ""; ?>> OUI
+                <input type="radio" name="close" value="non" <?= isset($_GET['docid']) && $staff_datas['close'] === 'non' ? "checked='checked'" : ""; ?>> NON
             </div>
           </div>
         </div>
@@ -224,11 +231,11 @@ getPatientId($response['id']);
         <div class="row form-group">
           <div class="col-sm-6">
             <label for="examen">Examens / Avis conditionnant la décision :</label>
-            <textarea name="examen" rows="8" cols="80" class="form-control"></textarea>
+            <textarea name="examen" rows="8" cols="80" class="form-control" <?= isset($_GET['docid']) ? "disabled" : ""; ?>><?= isset($_GET['docid']) ? $staff_datas['examen'] : ""; ?></textarea>
           </div>
           <div class="col-sm-6">
             <label for="post_op">Gestion prévisible et durée du traitement AAP / AVK en post-op :</label>
-            <textarea name="post_op" rows="8" cols="80" class="form-control"></textarea>
+            <textarea name="post_op" rows="8" cols="80" class="form-control" <?= isset($_GET['docid']) ? "disabled" : ""; ?>><?= isset($_GET['docid']) ? $staff_datas['post_op'] : "";?></textarea>
           </div>
         </div>
         <!-- Avis staff -->
@@ -242,11 +249,11 @@ getPatientId($response['id']);
               </div>
               <div class="panel-body">
                 <ul class="list-group">
-                  <li class="list-group-item">Cs anesthésie<input type="checkbox" value="anesthesie" name="post_close[]" class="right"></li>
-                  <li class="list-group-item">ETO<input type="checkbox" value="eto_close" class="right" name="post_close[]"></li>
-                  <li class="list-group-item">TDM coeur<input type="checkbox" value="tdm_coeur" class="right" name="post_close[]"></li>
-                  <li class="list-group-item">TDM cérébral / IRM<input type="checkbox" value="tdm_cerebral" class="right" name="post_close[]"></li>
-                  <li class="list-group-item">Avis gériatrique<input type="checkbox" value="geriatrique" class="right" name="post_close[]"></li>
+                  <li class="list-group-item">Cs anesthésie<input type="checkbox" value="anesthesie" name="post_close[]" class="right" <?= isset($_GET['docid']) && $post_close_datas['anesthesie'] === '1' ? "checked='checked'" : ""; ?>></li>
+                  <li class="list-group-item">ETO<input type="checkbox" value="eto_close" class="right" name="post_close[]" <?= isset($_GET['docid']) && $post_close_datas['eto_close'] === "1" ? "checked='checked'" : ""; ?>></li>
+                  <li class="list-group-item">TDM coeur<input type="checkbox" value="tdm_coeur" class="right" name="post_close[]" <?= isset($_GET['docid']) && $post_close_datas['tdm_coeur'] === "1" ? "checked='checked'" : ""; ?>></li>
+                  <li class="list-group-item">TDM cérébral / IRM<input type="checkbox" value="tdm_cerebral" class="right" name="post_close[]" <?= isset($_GET['docid']) && $post_close_datas['tdm_cerebral'] === "1" ? "checked='checked'" : ""; ?>></li>
+                  <li class="list-group-item">Avis gériatrique<input type="checkbox" value="geriatrique" class="right" name="post_close[]" <?= isset($_GET['docid']) && $post_close_datas['geriatrique'] === "1" ? "checked='checked'" : ""; ?>></li>
                 </ul>
               </div>
             </div>
@@ -261,52 +268,32 @@ getPatientId($response['id']);
                   <li class="list-group-item">
                     ETO
                     <div class="btn-group right"  data-toggle="buttons">
-                      <label class="btn btn-warning">
-                        <input type="radio" name="eto_imp" value="1 mois" autocomplete="off">1 mois
-                      </label>
-                      <label class="btn btn-warning">
-                        <input type="radio" name="eto_imp" value="3 mois" autocomplete="off">3 mois
-                      </label>
+                        <input type="radio" name="eto_imp" value="1 mois" autocomplete="off" <?= isset($_GET['docid']) && $post_imp_datas['eto_imp'] === '1 mois' ? "checked='checked'" : ""; ?>> 1 mois
+                        <input type="radio" name="eto_imp" value="3 mois" autocomplete="off" <?= isset($_GET['docid']) && $post_imp_datas['eto_imp'] === '3 mois' ? "checked='checked'" : ""; ?>> 3 mois
                     </div>
                   </li>
                   <li class="list-group-item">ETT
                     <div class="btn-group right"  data-toggle="buttons">
-                      <label class="btn btn-warning">
-                        <input type="radio" name="ett_imp" value="1 mois" autocomplete="off">1 mois
-                      </label>
-                      <label class="btn btn-warning">
-                        <input type="radio" name="ett_imp" value="3 mois" autocomplete="off">3 mois
-                      </label>
+                        <input type="radio" name="ett_imp" value="1 mois" autocomplete="off"<?= isset($_GET['docid']) && $post_imp_datas['ett_imp'] === '1 mois' ? "checked='checked'" : ""; ?>> 1 mois
+                        <input type="radio" name="ett_imp" value="3 mois" autocomplete="off" <?= isset($_GET['docid']) && $post_imp_datas['ett_imp'] === '3 mois' ? "checked='checked'" : ""; ?>> 3 mois
                     </div>
                   </li>
                   <li class="list-group-item">Scanner cardiaque
                     <div class="btn-group right"  data-toggle="buttons">
-                      <label class="btn btn-warning">
-                        <input type="radio" name="scanner" value="1 mois" autocomplete="off">1 mois
-                      </label>
-                      <label class="btn btn-warning">
-                        <input type="radio" name="scanner" value="3 mois" autocomplete="off">3 mois
-                      </label>
+                        <input type="radio" name="scanner" value="1 mois" autocomplete="off" <?= isset($_GET['docid']) && $post_imp_datas['scanner'] === '1 mois' ? "checked='checked'" : ""; ?>> 1 mois
+                        <input type="radio" name="scanner" value="3 mois" autocomplete="off" <?= isset($_GET['docid']) && $post_imp_datas['scanner'] === '3 mois' ? "checked='checked'" : ""; ?>> 3 mois
                     </div>
                   </li>
                   <li class="list-group-item">Cs neuro
                     <div class="btn-group right"  data-toggle="buttons">
-                      <label class="btn btn-warning">
-                        <input type="radio" name="cs_neuro" value="1 mois" autocomplete="off">1 mois
-                      </label>
-                      <label class="btn btn-warning">
-                        <input type="radio" name="cs_neuro" value="3 mois" autocomplete="off">3 mois
-                      </label>
+                        <input type="radio" name="cs_neuro" value="1 mois" autocomplete="off" <?= isset($_GET['docid']) && $post_imp_datas['cs_neuro'] === '1 mois' ? "checked='checked'" : ""; ?>> 1 mois
+                        <input type="radio" name="cs_neuro" value="3 mois" autocomplete="off" <?= isset($_GET['docid']) && $post_imp_datas['cs_neuro'] === '3 mois' ? "checked='checked'" : ""; ?>> 3 mois
                     </div>
                   </li>
                   <li class="list-group-item">Cs cardio
                     <div class="btn-group right"  data-toggle="buttons">
-                      <label class="btn btn-warning">
-                        <input type="radio" name="cs_cardio" value="1 mois" autocomplete="off">1 mois
-                      </label>
-                      <label class="btn btn-warning">
-                        <input type="radio" name="cs_cardio" value="3 mois" autocomplete="off">3 mois
-                      </label>
+                        <input type="radio" name="cs_cardio" value="1 mois" autocomplete="off" <?= isset($_GET['docid']) && $post_imp_datas['cs_cardio'] === '1 mois' ? "checked='checked'" : ""; ?>> 1 mois
+                        <input type="radio" name="cs_cardio" value="3 mois" autocomplete="off" <?= isset($_GET['docid']) && $post_imp_datas['cs_cardio'] === '3 mois' ? "checked='checked'" : ""; ?>> 3 mois
                     </div>
                   </li>
                 </ul>
@@ -319,26 +306,29 @@ getPatientId($response['id']);
       </div>
     </div>
     <div class="form-group">
-      <input type="submit" class="btn btn-success right" value="Envoyer">
+      <?php
+      if(!isset($_GET['docid'])){
+        echo "<input type='submit' class='btn btn-success right' value='Envoyer'>";
+      }
+
+      ?>
     </div>
-
-  <?php
-  if (isset($_POST['post_close'])) {
-    switchPostClose($_POST['post_close']);
-  }
-  if (isset($_POST['eto_imp']) && isset($_POST['ett_imp']) && isset($_POST['scanner']) && isset($_POST['cs_neuro']) && isset($_POST['cs_cardio'])) {
-    postImpAction($_POST['eto_imp'], $_POST['ett_imp'], $_POST['scanner'], $_POST['cs_neuro'], $_POST['cs_cardio']);
-  }
-  if(isset($_POST['staff_date']) && isset($_POST['close']) && isset($_POST['examen']) && isset($_POST['post_op'])) {
-    staffAction($_POST['staff_date'], $_POST['close'], $_POST['examen'], $_POST['post_op']);
-  }
-  ?>
-
   </form>
 </div>
-
 </div>
 
+<?php
+if(isset($_GET['id']) && isset($_GET['docid'])){
+  echo "<form action='archive.php' method='post'>
+  <div class='panel panel-warning'>
+          <div class='panel-heading'>Archiver en PDF</div>
+          <div class='panel-body'>
+            <input type='submit' class='btn btn-success' value='PDF'>
+          </div>
+        </div>
+        </form>";
+}
+?>
 
 <!-- Formulaire staff -->
 <?php include "parts/footer.php"; ?>
