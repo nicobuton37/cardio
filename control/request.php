@@ -33,7 +33,6 @@ function patientAction($firstname, $name, $birthday, $neuro_hemo)
 
 
 
-  echo "Le patient a été créé !";
 }
 
 function traitmentAction($aspirine, $thieno, $avk, $naco, $aucun, $contre_eto, $filtre_cave)
@@ -111,10 +110,6 @@ function doctorAction($firstname_doc, $name_doc, $mail, $mail_doc, $specialite, 
 
 }
 
-function sendMail($mail)
-{
-  // var_dump($mail);
-}
 
 function getPatientId($patient_id)
 {
@@ -185,70 +180,4 @@ function staffAction($staff_date, $close, $examen, $post_op)
     'post_close_id' => $post_close_id,
     'post_imp_id'   => $post_imp_id
   ));
-}
-
-function scoreHas()
-{
-  $score = 0;
-  global $bdd;
-
-  $request = $bdd->query("SELECT * FROM has");
-  $datas = $request->fetch();
-  var_dump($datas);
-  // foreach ($datas as $key => $value) {
-  //   switch ($value) {
-  //     case 'hta_has':
-  //       $score += 1;
-  //       break;
-  //     case 'insu_hepatique':
-  //       $score += 2;
-  //       break;
-  //     case 'insu_renale':
-  //       $score += 1;
-  //       break;
-  //     case 'ait':
-  //       $score += 1;
-  //       break;
-  //     case 'saignement':
-  //       $score += 1;
-  //       break;
-  //     case 'inr':
-  //       $score += 2;
-  //       break;
-  //     case 'age_has':
-  //       $score += 1;
-  //       break;
-  //     case 'alcool':
-  //       $score += 1;
-  //       break;
-  //     case 'ains':
-  //       $score += 2;
-  //       break;
-  //     default :
-  //
-  //       break;
-  //   }
-  // }
-  echo $score;
-}
-
-function scoreCha()
-{
-  $score = 0;
-  global $bdd;
-
-  $request = $bdd->query("SELECT * FROM cha");
-  $datas = $request->fetch();
-  // var_dump($datas);
-  foreach ($datas as $value) {
-    echo $value . "<br>";
-  }
-  // if($datas['insu_cardiaque'] == "1" || $datas['hta'] == "1" || $datas['diabete'] == "1" || $datas['vasculaire'] == "1" || $datas['age_tranche'] == "1" || $datas['femme'] == "1"){
-  //   $score += 1;
-  // }else if($datas['age'] == "1" || $datas['atcd'] == "1"){
-  //   $score += 2;
-  // }else{
-  //   $score += 0;
-  // }
-  // echo $score;
 }

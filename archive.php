@@ -22,18 +22,6 @@
 </form>
 
 <?php
-if(isset($_POST['destruct'])) {
 
-
-  $delete_staf = $bdd->exec("DELETE FROM staf");
-  $delete_post_close = $bdd->exec("DELETE FROM post_close");
-  $delete_post_imp = $bdd->exec("DELETE FROM post_imp");
-  $delete_doctor = $bdd->exec("DELETE FROM doctor");
-  $delete_patient = $bdd->exec("DELETE FROM patient");
-  $delete_traitement = $bdd->exec("DELETE FROM traitement");
-  $delete_cha = $bdd->exec("DELETE FROM cha");
-  $delete_has = $bdd->exec("DELETE FROM has");
-
-}
 
 ?>

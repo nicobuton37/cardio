@@ -7,7 +7,7 @@
 }
 
 body {
-  background: #c7c9cc;
+  background: rgb(0, 41, 73);
 }
 
 .center {
@@ -22,4 +22,24 @@ body {
 
 .btn_center {
   margin-top: 7px;
+}
+
+.second {
+  border-left: solid #c7c9cc;
+}
+
+.third {
+  border-left: solid #c7c9cc;
+}
+
+li .list-group-item div {
+  padding: 0;
+}
+
+div .second {
+  text-align: right;
+}
+
+.custom {
+  background: rgba(0, 0, 128, 1);
 }

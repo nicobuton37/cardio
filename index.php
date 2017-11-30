@@ -20,10 +20,18 @@ if(isset($_GET['id'])){
 
   $has = $bdd->query("SELECT * FROM has WHERE id=(SELECT has_id FROM patient WHERE id='$patient_id')");
   $has_datas = $has->fetch();
+
+  sendMailToStaff($_GET['id'], $doctor_datas['mail']);
+}
+if(isset($_GET['docid'])){
+  sendMailToDoctor($_GET['id'], $_GET['docid'], $doctor_datas['mail_doc']);
 }
 ?>
+<div class="alert alert-success" role="alert" id="message_success" <?= isset($_GET['id']) ? "" : "hidden" ?>>
+  Votre email a bien été envoyé à <?= isset($_GET['docid']) ? $doctor_datas['mail_doc'] : $doctor_datas['mail']; ?>
+</div>
 <div class="panel panel-default">
-  <div class="panel-heading">
+  <div class="panel-heading custom">
     Formulaire médecin
   </div>
 <div class="panel-body">
@@ -34,7 +42,7 @@ if(isset($_GET['id'])){
       <!-- panel patient -->
       <div class="col-sm-4">
         <div class="panel panel-info">
-          <div class="panel-heading">
+          <div class="panel-heading custom">
             Patient
           </div>
           <div class="panel-body">
@@ -52,7 +60,7 @@ if(isset($_GET['id'])){
       <!-- panel médecin -->
       <div class="col-sm-8">
         <div class="panel panel-info">
-          <div class="panel-heading">
+          <div class="panel-heading custom">
             Médecins
           </div>
           <div class="panel-body">
@@ -81,7 +89,7 @@ if(isset($_GET['id'])){
     <div class="row form-group">
       <div class="col-sm-4">
         <div class="panel panel-info">
-          <div class="panel-heading">
+          <div class="panel-heading custom">
             Traitement actuel
           </div>
           <div class="panel-body">
@@ -97,37 +105,240 @@ if(isset($_GET['id'])){
       </div>
       <div class="col-sm-8">
         <div class="panel panel-info">
-          <div class="panel-heading">
+          <div class="panel-heading custom">
             Score
           </div>
           <div class="panel-body">
             <div class="row">
               <div class="col-sm-6">
-                <ul class="list-group">
-                  <li class="list-group-item">Insuffisance cardiaque<input class="right" type="checkbox" value="insu_cardiaque" name="cha[]" <?= isset($_GET['id']) && $cha_datas['insu_cardiaque'] === '1' ? "checked='checked'" : ""; ?>></li>
-                  <li class="list-group-item">HTA<input class="right" type="checkbox" value="hta" name="cha[]" <?= isset($_GET['id']) && $cha_datas['hta'] === '1' ? "checked='checked'" : ""; ?>></li>
-                  <li class="list-group-item">Age >= 76 ans<input class="right" type="checkbox" value="age" name="cha[]" <?= isset($_GET['id']) && $cha_datas['age'] === '1' ? "checked='checked'" : ""; ?>></li>
-                  <li class="list-group-item">Diabète<input class="right" type="checkbox" value="diabete" name="cha[]" <?= isset($_GET['id']) && $cha_datas['diabete'] === '1' ? "checked='checked'" : ""; ?>></li>
-                  <li class="list-group-item">ATCD AIT ou AVC<input class="right" type="checkbox" value="atcd" name="cha[]" <?= isset($_GET['id']) && $cha_datas['atcd'] === '1' ? "checked='checked'" : ""; ?>></li>
-                  <li class="list-group-item">Vascular Disease<input class="right" type="checkbox" value="vasculaire" name="cha[]" <?= isset($_GET['id']) && $cha_datas['vasculaire'] === '1' ? "checked='checked'" : ""; ?>></li>
-                  <li class="list-group-item">Age 65-74 ans<input class="right" type="checkbox" value="age_tranche" name="cha[]" <?= isset($_GET['id']) && $cha_datas['age_tranche'] === '1' ? "checked='checked'" : ""; ?>></li>
-                  <li class="list-group-item">Sexe féminin<input class="right" type="checkbox" value="femme" name="cha[]" <?= isset($_GET['id']) && $cha_datas['femme'] === '1' ? "checked='checked'" : ""; ?>></li>
+                <ul class="list-group" id="ulCha">
+                  <li class="list-group-item title">Score de risque CHA²DSVASc</li>
+                  <li class="list-group-item" overflow="auto" value="1"  id="sum"><div class="row">
+                    <div class="col-md-7">
+                  Insuffisance cardiaque
+                    </div>
+                    <div class="col-md-3 second">
+                      1
+                    </div>
+                    <div class="col-md-2 third">
+                      <input id="cha[]" data-value="1" class="right" type="checkbox" value="insu_cardiaque" name="cha[]" <?= isset($_GET['id']) && $cha_datas['insu_cardiaque'] === '1' ? "checked='checked'" : ""; ?>>
+                    </div>
+                  </div></li>
+                  <li class="list-group-item" overflow="auto" value="1"  id="sum">
+                    <div class="row">
+                      <div class="col-md-7">
+                        HTA
+                      </div>
+                      <div class="col-md-3 second">
+                        1
+                      </div>
+                      <div class="col-md-2 third">
+                        <input id="cha[]" class="right" data-value="1" type="checkbox" value="hta" name="cha[]" <?= isset($_GET['id']) && $cha_datas['hta'] === '1' ? "checked='checked'" : ""; ?>>
+                      </div>
+                    </div>
+                  </li>
+                  <li class="list-group-item" value="2"  id="sum">
+                    <div class="row">
+                      <div class="col-md-7">
+                        Age >= 75 ans
+                      </div>
+                      <div class="col-md-3 second">
+                        2
+                      </div>
+                      <div class="col-md-2 third">
+                        <input data-value="2" id="cha[]" class="right" type="checkbox" value="age" name="cha[]" <?= isset($_GET['id']) && $cha_datas['age'] === '1' ? "checked='checked'" : ""; ?>>
+                      </div>
+                    </div>
+                  </li>
+                  <li class="list-group-item" value="1"  id="sum">
+                    <div class="row">
+                      <div class="col-md-7">
+                        Diabète
+                      </div>
+                      <div class="col-md-3 second">
+                        1
+                      </div>
+                      <div class="col-md-2 third">
+                        <input data-value="1" id="cha[]" class="right" type="checkbox" value="diabete" name="cha[]" <?= isset($_GET['id']) && $cha_datas['diabete'] === '1' ? "checked='checked'" : ""; ?>>
+                      </div>
+                    </div>
+                  </li>
+                  <li class="list-group-item" value="2"  id="sum">
+                  <div class="row">
+                    <div class="col-md-7">
+                      ATCD AIT ou AVC
+                    </div>
+                    <div class="col-md-3 second">
+                      2
+                    </div>
+                    <div class="col-md-2 third">
+                      <input  data-value="2" id="cha[]" class="right" type="checkbox" value="atcd" name="cha[]" <?= isset($_GET['id']) && $cha_datas['atcd'] === '1' ? "checked='checked'" : ""; ?>>
+                    </div>
+                  </div></li>
+                  <li class="list-group-item" value="1"  id="sum">
+                    <div class="row">
+                      <div class="col-md-7">
+                        Maladie vasculaire
+                      </div>
+                      <div class="col-md-3 second">
+                        1
+                      </div>
+                      <div class="col-md-2 third">
+                        <input data-value="1" id="cha[]" class="right" type="checkbox" value="vasculaire" name="cha[]" <?= isset($_GET['id']) && $cha_datas['vasculaire'] === '1' ? "checked='checked'" : ""; ?>>
+                      </div>
+                    </div>
+                  </li>
+                  <li class="list-group-item" value="1"  id="sum">
+                    <div class="row">
+                      <div class="col-md-7">
+                        Age 65-74 ans
+                      </div>
+                      <div class="col-md-3 second">
+                        1
+                      </div>
+                      <div class="col-md-2 third">
+                        <input data-value="1" id="cha[]" class="right" type="checkbox" value="age_tranche" name="cha[]" <?= isset($_GET['id']) && $cha_datas['age_tranche'] === '1' ? "checked='checked'" : ""; ?>>
+                      </div>
+                    </div>
+                  </li>
+                  <li class="list-group-item" value="1"  id="sum">
+                    <div class="row">
+                      <div class="col-md-7">
+                        Sexe féminin
+                      </div>
+                      <div class="col-md-3 second">
+                        1
+                      </div>
+                      <div class="col-md-2 third">
+                        <input data-value="1" id="cha[]" class="right" type="checkbox" value="femme" name="cha[]" <?= isset($_GET['id']) && $cha_datas['femme'] === '1' ? "checked='checked'" : ""; ?>>
+                      </div>
+                    </div>
+                  </li>
                   <li class="list-group-item">//</li>
-                  <li class="list-group-item">Total :<p class="right"><?= isset($_GET['id']) ? scoreCha() : ""; ?></p></li>
+                  <li class="list-group-item">Total :<p class="right" id="totalCha"></p></li>
                 </ul>
               </div>
               <div class="col-sm-6">
                 <ul class="list-group">
-                  <li class="list-group-item">HTA<input class="right" type="checkbox" value="hta_has" name="has[]" <?= isset($_GET['id']) && $has_datas['hta_has'] === '1' ? "checked='checked'" : ""; ?>></li>
-                  <li class="list-group-item">Insuffisance hépatique<input class="right" type="checkbox" value="insu_hepatique" name="has[]" <?= isset($_GET['id']) && $has_datas['insu_hepatique'] === '1' ? "checked='checked'" : ""; ?>></li>
-                  <li class="list-group-item">Insufisance rénale<input class="right" type="checkbox" value="insu_renale" name="has[]" <?= isset($_GET['id']) && $has_datas['insu_renale'] === '1' ? "checked='checked'" : ""; ?>></li>
-                  <li class="list-group-item">ATCD AIT ou AVC<input class="right" type="checkbox" value="ait_avc" name="has[]" <?= isset($_GET['id']) && $has_datas['ait_avc'] === '1' ? "checked='checked'" : ""; ?>></li>
-                  <li class="list-group-item">Saignement<input class="right" type="checkbox" value="saignement" name="has[]" <?= isset($_GET['id']) && $has_datas['saignement'] === '1' ? "checked='checked'" : ""; ?>></li>
-                  <li class="list-group-item">INR labile<input class="right" type="checkbox" value="inr" name="has[]" <?= isset($_GET['id']) && $has_datas['inr'] === '1' ? "checked='checked'" : ""; ?>></li>
-                  <li class="list-group-item">Age >= 65 ans<input class="right" type="checkbox" value="age_has" name="has[]" <?= isset($_GET['id']) && $has_datas['age_has'] === '1' ? "checked='checked'" : ""; ?>></li>
-                  <li class="list-group-item">Alcool<input class="right" type="checkbox" value="alcool" name="has[]" <?= isset($_GET['id']) && $has_datas['alcool'] === '1' ? "checked='checked'" : ""; ?>></li>
-                  <li class="list-group-item">Ains<input class="right" type="checkbox" value="ains" name="has[]" <?= isset($_GET['id']) && $has_datas['ains'] === '1' ? "checked='checked'" : ""; ?>></li>
-                  <li class="list-group-item">Total :<p class="right"><?= isset($_GET['id']) ? scoreHas() : ""; ?></p></li>
+                  <li class="list-group-item title">Score de risque HASBLED</li>
+                  <li class="list-group-item" value="1"  id="sum">
+                    <div class="row">
+                      <div class="col-md-7">
+                        HTA
+                      </div>
+                      <div class="col-md-3 second">
+                        1
+                      </div>
+                      <div class="col-md-2 third">
+                        <input data-value="1" id="has[]" class="right" type="checkbox" id="hta_has" value="hta_has" name="has[]" <?= isset($_GET['id']) && $has_datas['hta_has'] === '1' ? "checked='checked'" : ""; ?>>
+                      </div>
+                    </div>
+                  </li>
+                  <li class="list-group-item" value="2"  id="sum">
+                    <div class="row">
+                      <div class="col-md-7">
+                        Insuffisance hépatique
+                      </div>
+                      <div class="col-md-3 second">
+                        2
+                      </div>
+                      <div class="col-md-2 third">
+                        <input data-value="2" id="has[]" class="right" type="checkbox" id="insu_hepatique" value="insu_hepatique" name="has[]" <?= isset($_GET['id']) && $has_datas['insu_hepatique'] === '1' ? "checked='checked'" : ""; ?>>
+                      </div>
+                    </div>
+                  </li>
+                  <li class="list-group-item" value="1"  id="sum">
+                    <div class="row">
+                      <div class="col-md-7">
+                        Insufisance rénale
+                      </div>
+                      <div class="col-md-3 second">
+                        1
+                      </div>
+                      <div class="col-md-2 third">
+                        <input data-value="1" id="has[]" class="right" type="checkbox" id="insu_renale" value="insu_renale" name="has[]" <?= isset($_GET['id']) && $has_datas['insu_renale'] === '1' ? "checked='checked'" : ""; ?>>
+                      </div>
+                    </div>
+                  </li>
+                  <li class="list-group-item" value="1" id="sum">
+                    <div class="row">
+                      <div class="col-md-7">
+                        ATCD AIT ou AVC
+                      </div>
+                      <div class="col-md-3 second">
+                        1
+                      </div>
+                      <div class="col-md-2 third">
+                        <input data-value="1" id="has[]" class="right" type="checkbox" id="ait_avc" value="ait_avc" name="has[]" <?= isset($_GET['id']) && $has_datas['ait_avc'] === '1' ? "checked='checked'" : ""; ?>>
+                      </div>
+                    </div>
+                  </li>
+                  <li class="list-group-item" value="1"  id="sum">
+                    <div class="row">
+                      <div class="col-md-7">
+                        Saignement
+                      </div>
+                      <div class="col-md-3 second">
+                        1
+                      </div>
+                      <div class="col-md-2">
+                        <input data-value="1" id="has[]" class="right" type="checkbox" id="saignement" value="saignement" name="has[]" <?= isset($_GET['id']) && $has_datas['saignement'] === '1' ? "checked='checked'" : ""; ?>>
+                      </div>
+                    </div>
+                  </li>
+                  <li class="list-group-item" value="2"  id="sum">
+                    <div class="row">
+                      <div class="col-md-7">
+                        INR labile
+                      </div>
+                      <div class="col-md-3 second">
+                        2
+                      </div>
+                      <div class="col-md-2 third">
+                        <input data-value="2" id="has[]" class="right" type="checkbox" id="inr" value="inr" name="has[]" <?= isset($_GET['id']) && $has_datas['inr'] === '1' ? "checked='checked'" : ""; ?>>
+                      </div>
+                    </div>
+                  </li>
+                  <li class="list-group-item" value="1"  id="sum">
+                    <div class="row">
+                      <div class="col-md-7">
+                        Age >= 65 ans
+                      </div>
+                      <div class="col-md-3 second">
+                        1
+                      </div>
+                      <div class="col-md-2 third">
+                        <input data-value="1" id="has[]" class="right" type="checkbox" id="age_has" value="age_has" name="has[]" <?= isset($_GET['id']) && $has_datas['age_has'] === '1' ? "checked='checked'" : ""; ?>>
+                      </div>
+                    </div>
+                  </li>
+                  <li class="list-group-item" value="1"  id="sum">
+                    <div class="row">
+                      <div class="col-md-7">
+                        Alcool
+                      </div>
+                      <div class="col-md-3 second">
+                        1
+                      </div>
+                      <div class="col-md-2 third">
+                        <input data-value="1" id="has[]" class="right" type="checkbox" id="alcool" value="alcool" name="has[]" <?= isset($_GET['id']) && $has_datas['alcool'] === '1' ? "checked='checked'" : ""; ?>>
+                      </div>
+                    </div>
+                  </li>
+                  <li class="list-group-item" value="2"  id="sum">
+                    <div class="row">
+                      <div class="col-md-7">
+                        AINS
+                      </div>
+                      <div class="col-md-3 second">
+                        2
+                      </div>
+                      <div class="col-md-2 third">
+                        <input data-value="2" id="has[]" class="right" type="checkbox" id="ains" value="ains" name="has[]" <?= isset($_GET['id']) && $has_datas['ains'] === '1' ? "checked='checked'" : ""; ?>>
+                      </div>
+                    </div>
+                  </li>
+                  <li class="list-group-item">Total :<p class="right" id="totalHas"></p></li>
                 </ul>
               </div>
             </div>
@@ -137,7 +348,7 @@ if(isset($_GET['id'])){
     </div>
     <div class="form-group">
       <div class="panel panel-info">
-        <div class="panel-heading">
+        <div class="panel-heading custom">
           Détails supplémentaires
         </div>
         <div class="panel-body">
@@ -200,12 +411,12 @@ if(isset($_GET['id']) && isset($_GET['docid'])){
 
 <!-- Formulaire staff -->
 <div class="panel panel-default" id="panel_staff"  <?= !isset($_GET['id']) ? 'hidden' : ''; ?>>
-  <div class="panel-heading">
+  <div class="panel-heading custom">
     Formulaire Staff
   </div>
 <div class="panel-body">
   <div class="panel panel-info">
-    <div class="panel-heading">
+    <div class="panel-heading custom">
       Décision du staf
     </div>
     <form id="staff" action="toDoctor.php?id=<?= $_GET['id']; ?>" method="post">
@@ -244,7 +455,7 @@ if(isset($_GET['id']) && isset($_GET['docid'])){
         <div class="row form-group">
           <div class="col-sm-6">
             <div class="panel panel-info">
-              <div class="panel-heading">
+              <div class="panel-heading custom">
                 Examens à programmer avant fermeture
               </div>
               <div class="panel-body">
@@ -260,7 +471,7 @@ if(isset($_GET['id']) && isset($_GET['docid'])){
           </div>
           <div class="col-sm-6">
             <div class="panel panel-info">
-              <div class="panel-heading">
+              <div class="panel-heading custom">
                 Suivi post implantation
               </div>
               <div class="panel-body">
@@ -321,12 +532,26 @@ if(isset($_GET['id']) && isset($_GET['docid'])){
 if(isset($_GET['id']) && isset($_GET['docid'])){
   echo "<form action='archive.php' method='post'>
   <div class='panel panel-warning'>
-          <div class='panel-heading'>Archiver en PDF</div>
+          <div class='panel-heading custom'>Supprimer les informations patient</div>
           <div class='panel-body'>
-            <input type='submit' class='btn btn-success' value='PDF'>
+            <input type='submit' class='btn btn-success' value='supprimer'>
           </div>
         </div>
         </form>";
+}
+
+if(isset($_POST['destruct'])) {
+
+
+  $delete_staf = $bdd->exec("DELETE FROM staf");
+  $delete_post_close = $bdd->exec("DELETE FROM post_close");
+  $delete_post_imp = $bdd->exec("DELETE FROM post_imp");
+  $delete_doctor = $bdd->exec("DELETE FROM doctor");
+  $delete_patient = $bdd->exec("DELETE FROM patient");
+  $delete_traitement = $bdd->exec("DELETE FROM traitement");
+  $delete_cha = $bdd->exec("DELETE FROM cha");
+  $delete_has = $bdd->exec("DELETE FROM has");
+
 }
 ?>
 

@@ -22,9 +22,8 @@ if(isset($_POST['firstname']) && isset($_POST['name']) && $_POST['birthday'] && 
 $patient = $bdd->query("SELECT id FROM patient");
 $patient_datas = $patient->fetch();
 $patient_id = $patient_datas['id'];
-var_dump($patient_id);
 
-$req_doctor = $bdd->query("SELECT mail_doc FROM doctor");
+$req_doctor = $bdd->query("SELECT mail FROM doctor");
 $response_doctor = $req_doctor->fetch();
 ?>
 <form class="form-group" action="index.php?id=<?= $patient_id; ?>" method="post">
@@ -33,7 +32,7 @@ $response_doctor = $req_doctor->fetch();
       Vous désirez transmettre la fiche à l'adresse :
     </div>
     <div class="panel-body">
-      <input type="text" name="mail" value="<?= $response_doctor['mail_doc']; ?>" class="form-control confirm">
+      <input type="text" name="mail" value="<?= $response_doctor['mail']; ?>" class="form-control confirm">
       <div class="form-group">
         <input type="submit" value="Confirmer" class="btn btn-success btn_center">
       </div>
@@ -44,8 +43,3 @@ $response_doctor = $req_doctor->fetch();
 
 
 </form>
-<?php
-if(isset($response_doctor['mail_doc'])){
-  sendMail($response_doctor['mail_doc']);
-}
-?>

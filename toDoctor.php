@@ -20,9 +20,6 @@ $response_patient = $req_patient->fetch();
 $req_doctor = $bdd->query("SELECT * FROM doctor");
 $response_doctor = $req_doctor->fetch();
 
-if(isset($_POST['pdf'])){
-  var_dump("prout");
-}
 
 
 
@@ -33,7 +30,7 @@ if(isset($_POST['pdf'])){
       Vous désirez transmettre la fiche à l'adresse :
     </div>
     <div class="panel-body">
-      <input type="text" name="mail" value="<?= $response_doctor['mail']; ?>" class="form-control confirm">
+      <input type="text" name="mail" value="<?= $response_doctor['mail_doc']; ?>" class="form-control confirm">
       <div class="form-group">
         <input type="submit" value="Confirmer" class="btn btn-success btn_center">
       </div>
@@ -44,8 +41,3 @@ if(isset($_POST['pdf'])){
 
 
 </form>
-<?php
-if(isset($_POST['mail'])){
-  sendMail($_POST['mail']);
-}
-?>
